@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>Slides | Blockchain & Smart Cities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        dracula: {
+                            bg: '#0f172a',
+                            current: '#bd93f9',
+                            cyan: '#8be9fd',
+                            green: '#50fa7b',
+                            comment: '#6272a4',
+                            selection: '#44475a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f8f8f2;
+        }
+        #canvas-container {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-color: #1e1e1e;
+            position: relative;
+        }
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+        /* Hide scrollbar for fullscreen */
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-hidden flex flex-col h-screen">
+
+    <!-- Navbar -->
+    <nav class="w-full bg-[#0b0f19]/80 backdrop-blur-md border-b border-white/10 shrink-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="flex items-center text-slate-400 hover:text-dracula-cyan transition-colors group">
+                        <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                        <span class="font-mono text-sm">BACK</span>
+                    </a>
+                </div>
+                <div class="font-mono font-bold text-white tracking-tight hidden md:block">
+                    <span class="text-dracula-current">PRESENTATION</span>_DECK.pdf
+                </div>
+                <div class="flex items-center space-x-3">
+                     <span id="page_num_nav" class="font-mono text-sm text-slate-400 mr-2">Loading...</span>
+                     <button id="fullscreen-btn" class="p-2 rounded hover:bg-white/10 text-slate-300 transition" title="Toggle Fullscreen">
+                        <i class="fas fa-expand"></i>
+                     </button>
+                     <a href="final.pdf" download class="px-3 py-1 rounded bg-dracula-green/10 text-dracula-green text-xs border border-dracula-green/50 hover:bg-dracula-green/20 transition">
+                        DOWNLOAD
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Viewer -->
+    <main id="main-content" class="flex-grow flex flex-col items-center justify-center relative bg-[#1e1e1e] p-4">
+        
+        <!-- Controls Overlay -->
+        <div class="absolute inset-x-0 bottom-8 z-50 flex justify-center pointer-events-none">
+            <div class="bg-black/80 backdrop-blur-md rounded-full px-6 py-3 flex items-center space-x-6 border border-white/10 shadow-2xl pointer-events-auto">
+                <button id="prev" class="text-white hover:text-dracula-cyan transition transform hover:scale-110">
+                    <i class="fas fa-chevron-left text-xl"></i>
+                </button>
+                <span class="font-mono text-sm text-slate-300">
+                    Slide <span id="page_num" class="text-white font-bold">--</span> / <span id="page_count">--</span>
+                </span>
+                <button id="next" class="text-white hover:text-dracula-cyan transition transform hover:scale-110">
+                    <i class="fas fa-chevron-right text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div id="canvas-container" class="w-full h-full">
+            <div id="loader" class="absolute flex flex-col items-center text-dracula-current">
+                <i class="fas fa-circle-notch fa-spin text-4xl mb-3"></i>
+                <span class="font-mono text-sm">Loading PDF...</span>
+            </div>
+            <canvas id="the-canvas"></canvas>
+        </div>
+    </main>
+
+    <script>
+        // PDF.js Worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const url = 'final.pdf';
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 1.5,
+            canvas = document.getElementById('the-canvas'),
+            ctx = canvas.getContext('2d'),
+            container = document.getElementById('canvas-container');
+
+        // Responsive Scale Calculation
+        function getScale() {
+            if (!container) return 1.5;
+            const containerWidth = container.clientWidth - 40; // padding
+            const containerHeight = container.clientHeight - 40;
+            // Base resolution assumption (e.g., 16:9 1920x1080 slide)
+            // We need to wait for the page to load to know true dimensions, 
+            // but we can adjust scale dynamically in renderPage.
+            return 1.5; 
+        }
+
+        /**
+         * Get page info from document, resize canvas accordingly, and render page.
+         */
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Fetch page
+            pdfDoc.getPage(num).then(function(page) {
+                // Calculate scale to fit container
+                const containerWidth = container.clientWidth - 40;
+                const containerHeight = container.clientHeight - 40;
+                
+                const unscaledViewport = page.getViewport({scale: 1});
+                const scaleX = containerWidth / unscaledViewport.width;
+                const scaleY = containerHeight / unscaledViewport.height;
+                // Choose the smaller scale to fit entirely
+                const fitScale = Math.min(scaleX, scaleY);
+
+                const viewport = page.getViewport({scale: fitScale});
+                
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render PDF page into canvas context
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                const renderTask = page.render(renderContext);
+
+                // Wait for render to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    document.getElementById('loader').classList.add('hidden');
+                    
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+
+            // Update page counters
+            document.getElementById('page_num').textContent = num;
+            document.getElementById('page_num_nav').textContent = `Slide ${num} of ${pdfDoc.numPages}`;
+        }
+
+        /**
+         * If another page rendering in progress, waits until the rendering is
+         * finised. Otherwise, executes rendering immediately.
+         */
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        /**
+         * Displays previous page.
+         */
+        function onPrevPage() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+
+        /**
+         * Displays next page.
+         */
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+
+        // Event Listeners
+        document.getElementById('prev').addEventListener('click', onPrevPage);
+        document.getElementById('next').addEventListener('click', onNextPage);
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "ArrowLeft") {
+                onPrevPage();
+            } else if (e.key === "ArrowRight") {
+                onNextPage();
+            }
+        });
+
+        // Fullscreen Logic
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
+
+        function toggleFullScreen() {
+            const elem = document.getElementById('main-content');
+            
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE11 */
+                    elem.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+             if(pdfDoc) renderPage(pageNum);
+        });
+
+        /**
+         * Asynchronously downloads PDF.
+         */
+        pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+            // Initial/first page rendering
+            renderPage(pageNum);
+        }).catch(function(error) {
+            console.error('Error loading PDF:', error);
+            document.getElementById('loader').innerHTML = `<span class="text-red-500">Error loading slides.<br>Ensure final.pdf is in the directory.<br>Note: This may not work on local file system (file://) due to browser security. Works on GitHub Pages/Local Server.</span>`;
+        });
+    </script>
+</body>
+</html>

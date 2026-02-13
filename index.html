@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>Blockchain & Smart Cities | PBL Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        dracula: {
+                            bg: '#0f172a', /* darker slate */
+                            current: '#bd93f9', /* purple */
+                            cyan: '#8be9fd',
+                            green: '#50fa7b',
+                            orange: '#ffb86c',
+                            pink: '#ff79c6',
+                            red: '#ff5555',
+                            comment: '#6272a4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f8f8f2;
+        }
+        .neon-border {
+            box-shadow: 0 0 5px theme('colors.dracula.current'), 0 0 10px theme('colors.dracula.current');
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(189, 147, 249, 0.2);
+        }
+        .code-window {
+            background: #1e1e1e;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-dracula-pink selection:text-white overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-[#0b0f19]/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-mono font-bold text-dracula-cyan tracking-tighter">
+                    PBL_SEM4_2026
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
+                        <a href="#overview" class="hover:text-dracula-cyan transition-colors">OVERVIEW</a>
+                        <a href="slides.html" target="_blank" class="hover:text-dracula-purple transition-colors">SLIDES <span class="text-[10px] align-top">↗</span></a>
+                        <a href="#problem-solution" class="hover:text-dracula-pink transition-colors">PROBLEM & SOLUTION</a>
+                        <a href="#case-studies" class="hover:text-dracula-green transition-colors">CASE STUDIES</a>
+                        <a href="#impact" class="hover:text-dracula-orange transition-colors">IMPACT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+        <!-- Background Grid -->
+        <div class="absolute inset-0 z-0 opacity-20" 
+             style="background-image: radial-gradient(#6272a4 1px, transparent 1px); background-size: 40px 40px;">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center space-x-2 mb-6 animate-fade-in-up">
+                        <span class="h-2 w-2 bg-dracula-green rounded-full animate-pulse"></span>
+                        <span class="font-mono text-dracula-comment text-sm">STATUS: DECENTRALIZED TRUST</span>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                        BLOCKCHAIN & <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-dracula-cyan via-dracula-current to-dracula-pink">SMART CITIES</span>
+                    </h1>
+                    <p class="text-xl text-slate-400 mb-8 max-w-2xl leading-relaxed">
+                        Building Trustworthy, Scalable Urban Futures. Eliminating fragmentation and vulnerability through immutable ledger technology.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                        <a href="slides.html" target="_blank" class="px-8 py-4 bg-dracula-current hover:bg-opacity-90 text-[#0b0f19] font-bold rounded-lg transition transform hover:-translate-y-1 shadow-[0_0_20px_rgba(189,147,249,0.5)] text-center">
+                            LAUNCH SLIDES
+                        </a>
+                        <a href="#problem-solution" class="px-8 py-4 border border-dracula-cyan/50 text-dracula-cyan hover:bg-dracula-cyan/10 font-bold rounded-lg transition text-center font-mono">
+                            EXPLORE_SOLUTION
+                        </a>
+                    </div>
+
+                    <div class="border-l-2 border-dracula-comment pl-6">
+                        <p class="text-sm text-dracula-comment font-mono mb-1">PRESENTED BY</p>
+                        <p class="font-bold text-lg">Harsha Maheshwari</p>
+                        <p class="text-sm text-slate-500 font-mono">2427030725</p>
+                        <div class="mt-4 pt-4 border-t border-white/5">
+                            <p class="text-sm text-dracula-comment font-mono mb-1">SUPERVISED BY</p>
+                            <p class="font-bold text-white">Dr. Rishi Kumar Srivastva</p>
+                            <p class="text-xs text-slate-500 font-mono">School of Computer Science and Engineering</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Terminal / Visual -->
+                <div class="hidden lg:block relative">
+                    <div class="code-window p-1">
+                        <div class="bg-[#282a36] rounded-t p-3 flex items-center space-x-2 border-b border-white/5">
+                            <div class="w-3 h-3 rounded-full bg-dracula-red"></div>
+                            <div class="w-3 h-3 rounded-full bg-dracula-orange"></div>
+                            <div class="w-3 h-3 rounded-full bg-dracula-green"></div>
+                            <span class="ml-4 font-mono text-xs text-dracula-comment">smart_city_core.py</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm overflow-hidden">
+                            <div class="text-dracula-pink">class <span class="text-dracula-cyan">SmartCityLedger</span>:</div>
+                            <div class="pl-4 text-white">def <span class="text-dracula-green">__init__</span>(self):</div>
+                            <div class="pl-8 text-white">self.security = <span class="text-dracula-yellow">'Immutable'</span></div>
+                            <div class="pl-8 text-white">self.trust = <span class="text-dracula-yellow">'Decentralized'</span></div>
+                            <div class="pl-8 text-white">self.silos = <span class="text-dracula-red">None</span></div>
+                            
+                            <div class="pl-4 mt-2 text-white">def <span class="text-dracula-green">optimize_urban_flow</span>(self, data):</div>
+                            <div class="pl-8 text-dracula-comment"># IEEE Standard Security Protocol</div>
+                            <div class="pl-8 text-white">if <span class="text-dracula-cyan">validate_consensus</span>(data):</div>
+                            <div class="pl-12 text-white">return <span class="text-dracula-orange">True</span></div>
+                            
+                            <div class="mt-4 text-dracula-green"># Deploying Smart Contracts...</div>
+                            <div class="text-slate-400">> Energy Grid... <span class="text-dracula-green">SECURE</span></div>
+                            <div class="text-slate-400">> Transport... <span class="text-dracula-green">OPTIMIZED</span></div>
+                            <div class="mt-2 animate-pulse text-dracula-cyan">_</div>
+                        </div>
+                    </div>
+                    <!-- Decorative blobs -->
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-dracula-current rounded-full blur-3xl opacity-20"></div>
+                    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-dracula-cyan rounded-full blur-3xl opacity-20"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview / Cards -->
+    <section id="overview" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold font-mono mb-4 text-white"><span class="text-dracula-cyan">#</span> INTRODUCTION</h2>
+                <div class="h-1 w-20 bg-dracula-cyan"></div>
+            </div>
+
+            <!-- Intro Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <!-- Card 1 -->
+                <div class="glass-panel p-8 rounded-xl hover:border-dracula-red transition-all duration-300 group">
+                    <div class="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">🏙️</div>
+                    <h3 class="text-xl font-bold text-white mb-3 font-mono">SMART CITIES</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        Data-driven urban evolution utilizing IoT and big data to improve quality of life, resource efficiency, and sustainability.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel p-8 rounded-xl hover:border-dracula-current transition-all duration-300 group">
+                    <div class="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">⛓️</div>
+                    <h3 class="text-xl font-bold text-white mb-3 font-mono">BLOCKCHAIN</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        A decentralized ledger system ensuring immutability, security, and transparency without a central authority.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel p-8 rounded-xl hover:border-dracula-green transition-all duration-300 group">
+                    <div class="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">📖</div>
+                    <h3 class="text-xl font-bold text-white mb-3 font-mono">IEEE INSIGHTS</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        Research highlights blockchain's necessity for overcoming security vulnerabilities in urban IoT deployments.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Core Technology Expansion -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold font-mono mb-4 text-white"><span class="text-dracula-purple">#</span> CORE_TECHNOLOGY</h2>
+                <p class="text-slate-400 max-w-2xl mb-10">Why Blockchain is the foundational layer for next-gen urban infrastructure.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-[#1e1e1e] p-6 rounded-lg border-t-4 border-dracula-cyan shadow-lg hover:-translate-y-1 transition duration-300">
+                        <i class="fas fa-network-wired text-3xl text-dracula-cyan mb-4"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">Decentralization</h4>
+                        <p class="text-sm text-slate-400">Eliminates single points of failure by distributing control across a secure network, ensuring resilience.</p>
+                    </div>
+                    <div class="bg-[#1e1e1e] p-6 rounded-lg border-t-4 border-dracula-orange shadow-lg hover:-translate-y-1 transition duration-300">
+                        <i class="fas fa-lock text-3xl text-dracula-orange mb-4"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">Immutability</h4>
+                        <p class="text-sm text-slate-400">Data cannot be altered once recorded, creating a tamper-resistant history of all city interactions.</p>
+                    </div>
+                    <div class="bg-[#1e1e1e] p-6 rounded-lg border-t-4 border-dracula-pink shadow-lg hover:-translate-y-1 transition duration-300">
+                        <i class="fas fa-file-contract text-3xl text-dracula-pink mb-4"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">Smart Contracts</h4>
+                        <p class="text-sm text-slate-400">Automated, self-executing agreements enable peer-to-peer services without intermediaries.</p>
+                    </div>
+                    <div class="bg-[#1e1e1e] p-6 rounded-lg border-t-4 border-dracula-green shadow-lg hover:-translate-y-1 transition duration-300">
+                        <i class="fas fa-project-diagram text-3xl text-dracula-green mb-4"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">Interoperability</h4>
+                        <p class="text-sm text-slate-400">Standardized protocols allow diverse city systems (transport, energy) to exchange data seamlessly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem & Solution -->
+    <section id="problem-solution" class="py-20 bg-[#0e121b]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <!-- Problem -->
+                <div>
+                    <h2 class="text-3xl font-bold font-mono mb-6 text-white"><span class="text-dracula-red">!</span> THE_PROBLEM</h2>
+                    <div class="space-y-6">
+                        <div class="bg-dracula-red/10 border-l-4 border-dracula-red p-4 rounded-r-lg">
+                            <h3 class="font-bold text-white">Fragmented Data Silos</h3>
+                            <p class="text-sm text-slate-400 mt-1">Lack of interoperability between transport, energy, and safety systems.</p>
+                        </div>
+                        <div class="bg-dracula-red/10 border-l-4 border-dracula-red p-4 rounded-r-lg">
+                            <h3 class="font-bold text-white">Security Vulnerabilities</h3>
+                            <p class="text-sm text-slate-400 mt-1">Centralized legacy systems are prone to single points of failure and breaches.</p>
+                        </div>
+                        <div class="bg-dracula-red/10 border-l-4 border-dracula-red p-4 rounded-r-lg">
+                            <h3 class="font-bold text-white">Lack of Transparency</h3>
+                            <p class="text-sm text-slate-400 mt-1">Absence of public accountability in handling urban data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solution -->
+                <div>
+                    <h2 class="text-3xl font-bold font-mono mb-6 text-white"><span class="text-dracula-green">✓</span> PROPOSED_SOLUTION</h2>
+                    <p class="text-slate-400 mb-6">
+                        A decentralized trust framework that eliminates single points of failure.
+                    </p>
+                     <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-8 w-8 rounded bg-dracula-green/10 flex items-center justify-center text-dracula-green font-bold border border-dracula-green/30">1</div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-white">Decentralization</h4>
+                                <p class="text-sm text-slate-500">Resilience against attacks by distributing data.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-8 w-8 rounded bg-dracula-green/10 flex items-center justify-center text-dracula-green font-bold border border-dracula-green/30">2</div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-white">Smart Contracts</h4>
+                                <p class="text-sm text-slate-500">Automatic coordination of peer-to-peer services.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-8 w-8 rounded bg-dracula-green/10 flex items-center justify-center text-dracula-green font-bold border border-dracula-green/30">3</div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-white">Interoperability</h4>
+                                <p class="text-sm text-slate-500">Standardized protocols for seamless data exchange.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Literature Review Section -->
+            <div class="mt-24 mb-12">
+                <h2 class="text-3xl font-bold font-mono mb-8 text-white"><span class="text-dracula-orange">#</span> LITERATURE_REVIEW</h2>
+                
+                <div class="space-y-6">
+                    <!-- Lit Item 1 -->
+                    <div class="flex flex-col md:flex-row bg-[#1e1e1e] border border-white/5 rounded-xl overflow-hidden hover:border-dracula-orange/50 transition duration-300">
+                        <div class="bg-dracula-orange/10 p-6 flex flex-col justify-center items-center w-full md:w-48 shrink-0 border-r border-white/5">
+                            <i class="fas fa-shield-alt text-3xl text-dracula-orange mb-2"></i>
+                            <span class="font-mono text-xs font-bold text-dracula-orange uppercase">Focus Area</span>
+                        </div>
+                        <div class="p-6 flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">Security Foundation</h3>
+                            <p class="text-slate-400">IEEE studies consistently highlight blockchain’s necessity for overcoming inherent security and data integrity vulnerabilities within urban IoT deployments. Centralized databases remain prime targets for cyberattacks.</p>
+                        </div>
+                    </div>
+
+                    <!-- Lit Item 2 -->
+                    <div class="flex flex-col md:flex-row bg-[#1e1e1e] border border-white/5 rounded-xl overflow-hidden hover:border-dracula-red/50 transition duration-300">
+                        <div class="bg-dracula-red/10 p-6 flex flex-col justify-center items-center w-full md:w-48 shrink-0 border-r border-white/5">
+                            <i class="fas fa-exclamation-triangle text-3xl text-dracula-red mb-2"></i>
+                            <span class="font-mono text-xs font-bold text-dracula-red uppercase">Challenges</span>
+                        </div>
+                        <div class="p-6 flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">Implementation Hurdles</h3>
+                            <p class="text-slate-400">Major hurdles identified in recent literature include achieving adequate scalability for millions of devices, reducing network latency for real-time applications, and ensuring interoperability with legacy infrastructure.</p>
+                        </div>
+                    </div>
+
+                    <!-- Lit Item 3 -->
+                    <div class="flex flex-col md:flex-row bg-[#1e1e1e] border border-white/5 rounded-xl overflow-hidden hover:border-dracula-cyan/50 transition duration-300">
+                        <div class="bg-dracula-cyan/10 p-6 flex flex-col justify-center items-center w-full md:w-48 shrink-0 border-r border-white/5">
+                            <i class="fas fa-lightbulb text-3xl text-dracula-cyan mb-2"></i>
+                            <span class="font-mono text-xs font-bold text-dracula-cyan uppercase">Solutions</span>
+                        </div>
+                        <div class="p-6 flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">Emerging Approaches</h3>
+                            <p class="text-slate-400">Novel consensus algorithms (e.g., lightweight Proof of Stake), fault-tolerant protocols, and integrating Artificial Intelligence for proactive threat detection are leading research directions for 2025-2026.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Diagram -->
+            <div class="mt-20 bg-[#1e1e1e] rounded-xl p-6 shadow-2xl border border-white/5">
+                <div class="font-mono text-xs text-center text-dracula-comment mb-4">/// ARCHITECTURE_FLOW.mermaid</div>
+                <div class="mermaid">
+                    %%{
+                      init: {
+                        'theme': 'dark',
+                        'themeVariables': {
+                          'fontFamily': 'JetBrains Mono',
+                          'primaryColor': '#bd93f9',
+                          'primaryTextColor': '#f8f8f2',
+                          'lineColor': '#8be9fd',
+                          'mainBkg': '#1e1e1e',
+                          'edgeLabelBackground': '#282a36',
+                          'tertiaryColor': '#0b0f19'
+                        }
+                      }
+                    }%%
+                    graph LR
+                        subgraph IoT_Infrastructure [IoT Infrastructure]
+                            direction TB
+                            S1[Transport Sensors]:::sensor -->|Data| G[Edge Gateway]:::gateway
+                            S2[Energy Meters]:::sensor -->|Data| G
+                            S3[Safety Cams]:::sensor -->|Data| G
+                        end
+                        style IoT_Infrastructure fill:#0f172a,stroke:#6272a4,stroke-width:2px,color:#fff
+                        
+                        G -->|Encrypted Tx| BC{Blockchain Network}:::network
+                        
+                        subgraph Distributed_Ledger [Distributed Ledger]
+                            direction LR
+                            BC -->|Consensus| V[Validator Nodes]:::node
+                            V -->|Approve| L[(Immutable Ledger)]:::db
+                            L -->|Trigger| SC[Smart Contracts]:::contract
+                        end
+                        style Distributed_Ledger fill:#0f172a,stroke:#6272a4,stroke-width:2px,color:#fff
+                        
+                        SC -->|Action| A1[Auto-Traffic Control]:::action
+                        SC -->|Action| A2[P2P Energy Trade]:::action
+                        SC -->|Action| A3[Public Audit Log]:::action
+
+                        classDef sensor fill:#1e1e1e,stroke:#8be9fd,stroke-width:2px,color:#fff
+                        classDef gateway fill:#1e1e1e,stroke:#ffb86c,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+                        classDef network fill:#282a36,stroke:#ff79c6,stroke-width:4px,color:#fff
+                        classDef node fill:#1e1e1e,stroke:#bd93f9,stroke-width:2px,color:#fff
+                        classDef db fill:#1e1e1e,stroke:#50fa7b,stroke-width:2px,color:#fff
+                        classDef contract fill:#1e1e1e,stroke:#ff5555,stroke-width:2px,color:#fff
+                        classDef action fill:#0f172a,stroke:#f8f8f2,stroke-width:1px,color:#fff
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies -->
+    <section id="case-studies" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold font-mono mb-12 text-white"><span class="text-dracula-orange">#</span> CASE_STUDIES</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Case 1 -->
+                <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                    <h3 class="text-xl font-bold text-dracula-cyan mb-2">Intelligent Transportation</h3>
+                    <p class="text-slate-400 text-sm">Securing vehicle data, optimizing fleet management, and enabling transparent mobility services.</p>
+                </div>
+                <!-- Case 2 -->
+                <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                    <h3 class="text-xl font-bold text-dracula-orange mb-2">Sustainable Energy</h3>
+                    <p class="text-slate-400 text-sm">Utilizing smart contracts for secure, transparent peer-to-peer renewable energy trading.</p>
+                </div>
+                <!-- Case 3 -->
+                <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                    <h3 class="text-xl font-bold text-dracula-pink mb-2">Transparent Governance</h3>
+                    <p class="text-slate-400 text-sm">Verifiable voting, public record keeping, and citizen consultation to enhance public trust.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap" class="py-20 bg-[#0e121b] border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold font-mono mb-16 text-center text-white"><span class="text-dracula-current">#</span> FUTURE_ROADMAP</h2>
+            
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Vertical Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-dracula-cyan via-dracula-current to-dracula-pink"></div>
+
+                <!-- Step 1 -->
+                <div class="relative flex justify-between items-center mb-16 w-full">
+                    <div class="w-5/12 text-right pr-8">
+                        <h3 class="text-xl font-bold text-white mb-2">Deep Tech Integration</h3>
+                        <p class="text-slate-400 text-sm">Convergence of Blockchain with real-time AI, IoT, and Edge Computing for instantaneous, secure data processing at the source.</p>
+                    </div>
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-dracula-cyan border-4 border-[#0e121b] flex items-center justify-center text-[#0e121b] font-bold text-xs">1</div>
+                    <div class="w-5/12 pl-8"></div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative flex justify-between items-center mb-16 w-full">
+                    <div class="w-5/12 text-right pr-8"></div>
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-dracula-current border-4 border-[#0e121b] flex items-center justify-center text-[#0e121b] font-bold text-xs">2</div>
+                    <div class="w-5/12 pl-8">
+                        <h3 class="text-xl font-bold text-white mb-2">Balanced Governance</h3>
+                        <p class="text-slate-400 text-sm">Developing regulatory sandboxes and frameworks that merge the benefits of decentralization with essential legal compliance.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative flex justify-between items-center w-full">
+                    <div class="w-5/12 text-right pr-8">
+                        <h3 class="text-xl font-bold text-white mb-2">Advanced Research</h3>
+                        <p class="text-slate-400 text-sm">Enhancing fault tolerance, minimizing latency, and building infrastructure for complex cross-domain service orchestration.</p>
+                    </div>
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-dracula-pink border-4 border-[#0e121b] flex items-center justify-center text-[#0e121b] font-bold text-xs">3</div>
+                    <div class="w-5/12 pl-8"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future & Conclusion -->
+    <section id="impact" class="py-20 bg-[#0e121b]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold font-mono mb-8 text-white">THE FUTURE PATH</h2>
+            <p class="text-xl text-slate-300 mb-12 max-w-3xl mx-auto">
+                "Blockchain offers a secure, decentralized, and transparent foundation critical for building public trust in smart city ecosystems."
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left max-w-4xl mx-auto">
+                <div class="bg-black/20 p-6 rounded-xl border border-white/5">
+                    <h3 class="text-lg font-bold text-white mb-2">Scalability Achieved</h3>
+                    <p class="text-slate-400">Deep tech integration with AI and Edge computing allows for handling massive urban data volumes.</p>
+                </div>
+                <div class="bg-black/20 p-6 rounded-xl border border-white/5">
+                    <h3 class="text-lg font-bold text-white mb-2">Balanced Governance</h3>
+                    <p class="text-slate-400">Developing frameworks that merge decentralization benefits with regulatory compliance.</p>
+                </div>
+            </div>
+
+            <div class="mt-16">
+                 <a href="slides.html" target="_blank" class="inline-block px-8 py-4 bg-dracula-green hover:bg-opacity-90 text-[#0b0f19] font-bold rounded-full transition transform hover:scale-105 shadow-lg">
+                    OPEN PRESENTATION DECK
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0b0f19] border-t border-white/10 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-6">
+                <span class="font-mono text-2xl font-bold tracking-tighter text-white">PBL_SEM4</span>
+            </div>
+            <p class="text-slate-500 mb-8 max-w-md mx-auto">
+                Department of Computer Science and Engineering.
+                <br>Submission for 2026 Academic Session.
+            </p>
+            <p class="text-xs text-slate-600 font-mono">
+                &copy; 2026 Harsha Maheshwari. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle PPT Viewer
+        function togglePPT() {
+            const viewer = document.getElementById('ppt-viewer');
+            viewer.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
